@@ -6,12 +6,12 @@ from holiday_entitlement import HolidayEntitlement
 
 @pytest.fixture()
 def hours_entitlement() -> HolidayEntitlement:
-    return HolidayEntitlement.model_validate({'counting_method': 'HOURS', 'amount': 273, 'working_pattern': [8,5,0,3,4,0,7]})
+    return HolidayEntitlement.model_validate({'counting_method': 'HOURS', 'amount': 273, 'working_pattern': [8,5,0,3,4,0,7], 'bank_holidays_counted': True})
 
 
 @pytest.fixture()
 def days_entitlement() -> HolidayEntitlement:
-    return HolidayEntitlement.model_validate({'counting_method': 'DAYS', 'amount': 273, 'working_pattern': [1,0,0,1,0,1,1]})
+    return HolidayEntitlement.model_validate({'counting_method': 'DAYS', 'amount': 273, 'working_pattern': [1,0,0,1,0,1,1], 'bank_holidays_counted': False})
 
 
 @pytest.mark.parametrize("date,expected_cost",
@@ -38,3 +38,13 @@ def test_cost_of_day_calculated_in_hours(hours_entitlement, date, expected_cost)
 def test_cost_of_day_calculated_in_days(days_entitlement, date, expected_cost):
     cost = days_entitlement.get_cost_of_day(date)
     assert cost == expected_cost
+
+
+def test_bank_holiday_free_when_not_counted(days_entitlement):
+    cost = days_entitlement.get_cost_of_day(datetime(2026, 1, 1))  # Bank holiday Thursday
+    assert cost == 0
+
+
+def test_bank_holiday_costs_when_counted(hours_entitlement):
+    cost = hours_entitlement.get_cost_of_day(datetime(2026, 1, 1))  # Bank holiday Thursday
+    assert cost == 3
