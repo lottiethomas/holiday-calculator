@@ -3,4 +3,8 @@ name = "holiday-calculator"
 version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "holidays>=0.88",
+    "pydantic>=2.12.5",
+    "pytest>=9.0.2",
+]
