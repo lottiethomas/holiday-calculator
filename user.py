@@ -1,10 +1,11 @@
-from pydantic import BaseModel
+from dataclasses import dataclass
 
 from holiday import Holiday
 from holiday_entitlement import HolidayEntitlement
 
 
-class User(BaseModel):
+@dataclass
+class User:
     holiday_entitlement: HolidayEntitlement
     holidays: list[Holiday]
 

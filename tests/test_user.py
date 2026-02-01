@@ -1,5 +1,8 @@
+from datetime import datetime
+
 import pytest
 
+from entitlement_counting_method import EntitlementCountingMethod
 from holiday import Holiday
 from holiday_entitlement import HolidayEntitlement
 from user import User
@@ -7,19 +10,18 @@ from user import User
 
 @pytest.fixture()
 def holiday():
-    yield Holiday.model_validate({'start_date': '2026-01-01', 'end_date': '2026-01-14'})
+    yield Holiday(start_date=datetime(2026, 1, 1), end_date=datetime(2026, 1, 14))
 
 
 @pytest.fixture()
 def holiday_entitlement():
-    yield HolidayEntitlement.model_validate(
-        {'counting_method': 'DAYS', 'amount': 273, 'working_pattern': [1, 1, 1, 1, 1, 1, 1],
-         'bank_holidays_counted': True, 'renewal_date': '2026-01-01'})
+    yield HolidayEntitlement(counting_method=EntitlementCountingMethod.DAYS, amount=273,
+                             working_pattern=(1, 1, 1, 1, 1, 1, 1), bank_holidays_counted=True, renewal_month=1)
 
 
 @pytest.fixture()
 def user(holiday, holiday_entitlement):
-    yield User.model_validate({'holiday_entitlement': holiday_entitlement, 'holidays': [holiday]})
+    yield User(holiday_entitlement=holiday_entitlement, holidays=[holiday])
 
 
 def test_get_cost_for_holiday(user, mocker):
