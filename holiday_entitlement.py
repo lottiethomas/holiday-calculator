@@ -9,7 +9,7 @@ import holidays
 
 class HolidayEntitlement(BaseModel):
     """Class for tracking the holiday entitlement of an individual"""
-    # TODO validation
+    # TODO: Add pydantic validators for working_pattern length/values, amount_exceptions date ranges, and renewal_date consistency.
 
     class CountingMethod(Enum):
         DAYS = 'DAYS'
