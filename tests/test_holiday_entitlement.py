@@ -1,31 +1,33 @@
 from datetime import datetime
+
 import pytest
 
+from amount_exception import AmountException
+from entitlement_counting_method import EntitlementCountingMethod
 from holiday_entitlement import HolidayEntitlement
 
 
 @pytest.fixture()
 def hours_entitlement():
-    yield HolidayEntitlement.model_validate(
-        {'counting_method': 'HOURS', 'amount': 273, 'working_pattern': [8, 5, 0, 3, 4, 0, 7],
-         'bank_holidays_counted': True, "renewal_date": "2026-01-01"})
+    yield HolidayEntitlement(counting_method=EntitlementCountingMethod.HOURS, amount=273,
+                             working_pattern=(8, 5, 0, 3, 4.5, 0, 7), bank_holidays_counted=True, renewal_month=1)
 
 
 @pytest.fixture()
 def days_entitlement():
-    yield HolidayEntitlement.model_validate(
-        {'counting_method': 'DAYS', 'amount': 273, 'working_pattern': [1, 0, 0, 1, 0, 1, 1],
-         'bank_holidays_counted': False, "renewal_date": "2026-01-01"})
+    yield HolidayEntitlement(counting_method=EntitlementCountingMethod.DAYS, amount=273,
+                             working_pattern=(1, 0, 0, 1, 0, 1, 1), bank_holidays_counted=False, renewal_month=1)
 
 
 @pytest.fixture()
 def days_entitlement_with_amount_exceptions():
-    yield HolidayEntitlement.model_validate(
-        {'counting_method': 'DAYS', 'amount': 273, 'working_pattern': [1, 0, 0, 1, 0, 1, 1],
-         'bank_holidays_counted': False, "renewal_date": "2026-04-01",
-         'amount_exceptions': [{'start_date': '2025-04-01', 'end_date': '2026-03-31', 'amount': 50},
-                               {'start_date': '2027-04-01', 'end_date': '2028-03-31', 'amount': 94}]}
-    )
+    yield HolidayEntitlement(counting_method=EntitlementCountingMethod.DAYS, amount=273,
+                             working_pattern=(1, 0, 0, 1, 0, 1, 1), bank_holidays_counted=False, renewal_month=4,
+                             amount_exceptions=[
+                                 AmountException(start_date=datetime(2025, 4, 1), end_date=datetime(2026, 3, 31),
+                                                 amount=50),
+                                 AmountException(start_date=datetime(2027, 4, 1), end_date=datetime(2028, 3, 31),
+                                                 amount=94)])
 
 
 @pytest.mark.parametrize("date,expected_cost",
@@ -33,7 +35,7 @@ def days_entitlement_with_amount_exceptions():
                           (datetime(2026, 1, 20), 5),
                           (datetime(2026, 1, 21), 0),
                           (datetime(2026, 1, 22), 3),
-                          (datetime(2026, 1, 23), 4),
+                          (datetime(2026, 1, 23), 4.5),
                           (datetime(2026, 1, 24), 0),
                           (datetime(2026, 1, 25), 7)])
 def test_cost_of_day_calculated_in_hours(hours_entitlement, date, expected_cost):

@@ -1,9 +1,11 @@
+from dataclasses import dataclass
 from datetime import datetime
-from pydantic import BaseModel
+
 import pandas as pd
 
 
-class Holiday(BaseModel):
+@dataclass
+class Holiday:
     start_date: datetime
     end_date: datetime
 

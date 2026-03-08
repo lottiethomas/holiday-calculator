@@ -1,30 +1,21 @@
+from dataclasses import dataclass
 from datetime import datetime
-from enum import Enum
-from typing import Optional
-
-from pydantic import BaseModel
+from typing import Optional, Tuple
 
 import holidays
 
+from amount_exception import AmountException
+from entitlement_counting_method import EntitlementCountingMethod
 
-class HolidayEntitlement(BaseModel):
+
+@dataclass
+class HolidayEntitlement:
     """Class for tracking the holiday entitlement of an individual"""
-    # TODO: Add pydantic validators for working_pattern length/values, amount_exceptions date ranges, and renewal_date consistency.
-
-    class CountingMethod(Enum):
-        DAYS = 'DAYS'
-        HOURS = 'HOURS'
-
-    class AmountException(BaseModel):
-        start_date: datetime
-        end_date: datetime
-        amount: float
-
-    counting_method: CountingMethod
+    counting_method: EntitlementCountingMethod
     amount: float
-    working_pattern: tuple[int, int, int, int, int, int, int]
+    working_pattern: Tuple[float, float, float, float, float, float, float]
     bank_holidays_counted: bool
-    renewal_date: datetime
+    renewal_month: int
     amount_exceptions: Optional[list[AmountException]] = None
 
     _bank_holidays = holidays.country_holidays('UK', subdiv='ENG')
