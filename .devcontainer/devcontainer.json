@@ -1,27 +1,22 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "hostRequirements": {
+  "name": "Python 3.14",
+  "image": "mcr.microsoft.com/devcontainers/python:3.14-trixie",
+  "hostRequirement": {
     "cpus": 4
   },
-  "features": {
-    "ghcr.io/devcontainers/features/python:1": {
-      "version": "3.14"
-    },
-    "ghcr.io/devcontainers-extra/features/uv:1": {}
-  },
-  "onCreateCommand": "pip install uv",
-  "postCreateCommand": "uv sync && echo 'source .venv/bin/activate' >> ~/.bashrc",
   "customizations": {
     "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.enabled": true
+      },
       "extensions": [
         "ms-python.python",
-        "ms-python.vscode-pylance"
-      ],
-      "settings": {
-        "python.defaultInterpreterPath": "./.venv/bin/python",
-        "python.terminal.activateEnvironment": true,
-        "python.terminal.activateEnvInCurrentTerminal": true
-      }
+        "ms-python.vscode-pylance",
+        "ms-python.vscode-python-envs",
+        "GitHub.copilot"
+      ]
     }
-  }
+  },
+  "postCreateCommand": "pip install uv && uv sync"
 }
