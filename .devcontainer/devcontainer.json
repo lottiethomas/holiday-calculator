@@ -1,13 +1,13 @@
 {
   "name": "Python 3.14",
   "image": "mcr.microsoft.com/devcontainers/python:3.14-trixie",
-  "hostRequirement": {
+  "hostRequirements": {
     "cpus": 4
   },
   "customizations": {
     "vscode": {
       "settings": {
-        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.defaultInterpreterPath": ".venv/bin/python",
         "python.linting.enabled": true
       },
       "extensions": [
