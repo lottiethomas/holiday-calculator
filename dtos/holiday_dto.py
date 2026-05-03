@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import BaseModel, model_validator
 
@@ -8,6 +9,7 @@ from holiday import Holiday
 class HolidayDto(BaseModel):
     start_date: datetime
     end_date: datetime
+    description: Optional[str] = ""
 
     @model_validator(mode='after')
     def end_date_must_be_on_or_after_start_date(self):
@@ -16,5 +18,5 @@ class HolidayDto(BaseModel):
         return self
 
     def to_holiday(self) -> 'Holiday':
-        return Holiday(start_date=self.start_date, end_date=self.end_date)
+        return Holiday(start_date=self.start_date, end_date=self.end_date, description=self.description)
     

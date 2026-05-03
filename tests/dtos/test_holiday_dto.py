@@ -41,10 +41,25 @@ def test_end_date_can_be_on_or_after_start_date(model):
 
 
 def test_dto_can_be_converted_to_holiday():
+    description = 'test holiday'
     # Given a holiday DTO
-    holiday_dto = HolidayDto.model_validate({'start_date': '2026-01-01', 'end_date': '2026-01-02'})
+    holiday_dto = HolidayDto.model_validate(
+        {'start_date': '2026-01-01', 'end_date': '2026-01-02', 'description': description})
     # When the DTO is converted to a holiday,
     holiday = holiday_dto.to_holiday()
-    # Then the holiday should have the correct start and end date
+    # Then the holiday should have the correct start and end date, and description
     assert holiday.start_date == datetime(2026, 1, 1)
     assert holiday.end_date == datetime(2026, 1, 2)
+    assert holiday.description == description
+
+
+def test_dto_can_be_converted_to_holiday_without_description():
+    # Given a holiday DTO without a description
+    holiday_dto = HolidayDto.model_validate(
+        {'start_date': '2026-01-01', 'end_date': '2026-01-02'})
+    # When the DTO is converted to a holiday,
+    holiday = holiday_dto.to_holiday()
+    # Then the holiday should have the correct start and end date, and the default description
+    assert holiday.start_date == datetime(2026, 1, 1)
+    assert holiday.end_date == datetime(2026, 1, 2)
+    assert holiday.description == ""
