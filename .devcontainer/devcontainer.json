@@ -18,5 +18,5 @@
       ]
     }
   },
-  "postCreateCommand": "pip install uv && uv sync"
+  "postCreateCommand": "pip install uv && pip install -U pytest && uv sync"
 }
