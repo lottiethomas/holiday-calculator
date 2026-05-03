@@ -1,3 +1,4 @@
+import calendar
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional, Tuple
@@ -19,6 +20,13 @@ class HolidayEntitlement:
     amount_exceptions: Optional[list[AmountException]] = None
 
     _bank_holidays = holidays.country_holidays('UK', subdiv='ENG')
+
+    def get_description_of_entitlement_for_year_starting_in(self, year: int) -> str:
+        if self.renewal_month == 1:
+            return str(year)
+        else:
+            return (f'{calendar.month_name[self.renewal_month]} {str(year)} to '
+                    f'{calendar.month_name[self.renewal_month - 1]} {str(year + 1)}')
 
     def get_cost_of_day(self, day: datetime) -> float:
         if not self.bank_holidays_counted:

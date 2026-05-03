@@ -75,3 +75,16 @@ def test_get_entitlement_for_date(days_entitlement):
 def test_amount_exception_applied(days_entitlement_with_amount_exceptions, date, expected):
     on_date = datetime.strptime(date, '%Y-%m-%d')
     assert days_entitlement_with_amount_exceptions.get_entitlement_for_date(on_date) == expected
+
+
+@pytest.mark.parametrize("renewal_month,starting_year,expected_string", [(1, 2026, '2026'), (1, 2027, '2027'),
+                                                                         (4, 2026, 'April 2026 to March 2027'),
+                                                                         (9, 2027, 'September 2027 to August 2028')])
+def test_get_description_for_year_returns_expected_string(days_entitlement, renewal_month, starting_year,
+                                                          expected_string):
+    # Given an entitlement that starts on the given renewal month
+    days_entitlement.renewal_month = renewal_month
+    # When the description of the year is requested
+    description = days_entitlement.get_description_of_entitlement_for_year_starting_in(starting_year)
+    # Then the description should be the expected string
+    assert description == expected_string

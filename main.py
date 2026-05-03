@@ -41,8 +41,13 @@ def main() -> int:
 
     # User details from the JSON file
     user = UserDto.model_validate(data).to_user()
-    print(user)
-    print(user.get_cost_for_holiday(user.holidays[0]))
+
+    print(f"Cost for holidays in 2025/2026: {user.get_cost_for_holidays_in_holiday_year_starting_in(2025)}")
+    print(f"Hours left in 2025/2026: {user.get_remaining_allowance_for_year_starting_in(2025)}")
+    print(f"Cost for holidays in 2026/2027: {user.get_cost_for_holidays_in_holiday_year_starting_in(2026)}")
+    print(f"Hours left in 2026/2027: {user.get_remaining_allowance_for_year_starting_in(2026)}")
+
+    print(f'Days left in 2026/2027: {user.get_remaining_allowance_for_year_starting_in(2026)/8}')
     return 0
 
 
