@@ -4,7 +4,7 @@ from typing import Optional
 import pytest
 from pydantic import ValidationError
 
-from dtos.amount_exception_dto import AmountExceptionDto
+from holiday_calculator.dtos.amount_exception_dto import AmountExceptionDto
 
 DEFAULT_START_DATE = "2022-01-01"
 DEFAULT_END_DATE = "2022-12-31"

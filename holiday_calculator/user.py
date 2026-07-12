@@ -20,11 +20,14 @@ class User:
     def get_cost_for_holidays_in_date_range(
         self, start_date: date, end_date: date
     ) -> float:
-        return sum(
-            self._get_cost_for_dates(holiday.get_dates_in_holiday(start_date, end_date))
-            for holiday in self.holidays
-            if holiday.is_in_date_range(start_date, end_date)
-        )
+        dates_to_count = []
+        for holiday in self.holidays:
+            if holiday.is_in_date_range(start_date, end_date):
+                dates_to_count.extend(
+                    holiday.get_dates_in_holiday(start_date, end_date)
+                )
+        dates_to_count = set(dates_to_count)
+        return self._get_cost_for_dates(dates_to_count)
 
     def _get_holiday_year_date_range(self, year: int) -> tuple[date, date]:
         start_date = date(year, self.holiday_entitlement.renewal_month, 1)

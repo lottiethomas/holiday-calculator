@@ -4,9 +4,21 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.14"
 dependencies = [
-    "black>=26.5.1",
     "holidays>=0.89",
     "pydantic>=2.12.5",
-    "pytest>=9.0.2",
+]
+[dependency-groups]
+dev = [
+    "black>=26.5.1",
+    "ruff>=0.15.21",
+    "pytest>=9.1.1",
     "pytest-mock>=3.15.1",
 ]
+
+[tool.black]
+line-length = 88
+target-version = ["py314"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+

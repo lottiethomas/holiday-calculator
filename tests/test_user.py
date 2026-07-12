@@ -2,11 +2,11 @@ from datetime import date
 
 import pytest
 
-from amount_exception import AmountException
-from entitlement_counting_method import EntitlementCountingMethod
-from holiday import Holiday
-from holiday_entitlement import HolidayEntitlement
-from user import User
+from holiday_calculator.amount_exception import AmountException
+from holiday_calculator.entitlement_counting_method import EntitlementCountingMethod
+from holiday_calculator.holiday import Holiday
+from holiday_calculator.holiday_entitlement import HolidayEntitlement
+from holiday_calculator.user import User
 
 
 def mock_daily_cost(mocker, cost=1):
@@ -320,4 +320,41 @@ def test_remaining_allowance_for_year_deducts_only_matching_part_of_spanning_hol
     assert (
         user.get_remaining_allowance_for_year_starting_in(year)
         == holiday_entitlement.amount - deducted_cost
+    )
+
+
+@pytest.mark.parametrize(
+    ("holidays", "expected_cost"),
+    [
+        pytest.param(
+            [
+                Holiday(date(2026, 4, 1), date(2026, 4, 14)),
+                Holiday(date(2026, 4, 1), date(2026, 4, 14)),
+            ],
+            14,
+            id="Completely overlapping holidays",
+        ),
+        pytest.param(
+            [
+                Holiday(date(2026, 4, 1), date(2026, 4, 14)),
+                Holiday(date(2026, 4, 14), date(2026, 4, 15)),
+            ],
+            15,
+            id="Overlap by one day at the end",
+        ),
+    ],
+)
+def test_overlapping_holidays_are_counted_once(
+    holiday_entitlement, holidays, expected_cost, mocker
+):
+    # Given a user with two overlapping holidays
+    user = User(holiday_entitlement, holidays)
+    mock_daily_cost(mocker)
+    # When the cost of the holidays is retrieved,
+    # Then the cost will be 14
+    assert (
+        user.get_cost_for_holidays_in_date_range(
+            start_date=date(2026, 1, 1), end_date=date(2026, 12, 31)
+        )
+        == expected_cost
     )

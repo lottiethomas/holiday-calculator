@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import date, timedelta
+from typing import Iterable
 
 
 @dataclass
@@ -8,17 +9,16 @@ class Holiday:
     end_date: date
     description: str = ""
 
+    def __post_init__(self) -> None:
+        if self.end_date < self.start_date:
+            raise ValueError("End date must be on or after start date")
+
     def get_dates_in_holiday(
         self, from_date: date | None = None, to_date: date | None = None
-    ) -> list[date]:
-        start_date = (
-            self.start_date
-            if from_date is None or from_date < self.start_date
-            else from_date
-        )
-        end_date = (
-            self.end_date if to_date is None or to_date > self.end_date else to_date
-        )
+    ) -> Iterable[date]:
+        start_date = max(self.start_date, from_date) if from_date else self.start_date
+        end_date = min(self.end_date, to_date) if to_date else self.end_date
+
         return [
             start_date + timedelta(days=i)
             for i in range((end_date - start_date).days + 1)

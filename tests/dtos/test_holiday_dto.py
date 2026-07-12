@@ -3,7 +3,7 @@ from datetime import date
 import pytest
 from pydantic import ValidationError
 
-from dtos.holiday_dto import HolidayDto
+from holiday_calculator.dtos.holiday_dto import HolidayDto
 
 
 @pytest.mark.parametrize(

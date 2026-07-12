@@ -3,7 +3,7 @@ import json
 import sys
 from pathlib import Path
 
-from dtos.user_dto import UserDto
+from holiday_calculator.dtos.user_dto import UserDto
 
 
 def parse_args() -> argparse.Namespace:
@@ -33,7 +33,10 @@ def main() -> int:
         with path.open("r", encoding="utf-8") as f:
             data = json.load(f)
     except json.JSONDecodeError as e:
-        print(f"Error: invalid JSON in {path} at line {e.lineno}, column {e.colno}", file=sys.stderr)
+        print(
+            f"Error: invalid JSON in {path} at line {e.lineno}, column {e.colno}",
+            file=sys.stderr,
+        )
         return 3
     except OSError as e:
         print(f"Error: could not read {path}: {e}", file=sys.stderr)
@@ -42,12 +45,23 @@ def main() -> int:
     # User details from the JSON file
     user = UserDto.model_validate(data).to_user()
 
-    print(f"Cost for holidays in 2025/2026: {user.get_cost_for_holidays_in_holiday_year_starting_in(2025)}")
-    print(f"Hours left in 2025/2026: {user.get_remaining_allowance_for_year_starting_in(2025)}")
-    print(f"Cost for holidays in 2026/2027: {user.get_cost_for_holidays_in_holiday_year_starting_in(2026)}")
-    print(f"Hours left in 2026/2027: {user.get_remaining_allowance_for_year_starting_in(2026)}")
+    print(
+        f"Cost for holidays in 2025/2026: {user.get_cost_for_holidays_in_holiday_year_starting_in(2025)}"
+    )
+    print(
+        f"Hours left in 2025/2026: {user.get_remaining_allowance_for_year_starting_in(2025)}"
+    )
+    print()
+    print(
+        f"Cost for holidays in 2026/2027: {user.get_cost_for_holidays_in_holiday_year_starting_in(2026)}"
+    )
+    print(
+        f"Hours left in 2026/2027: {user.get_remaining_allowance_for_year_starting_in(2026)}"
+    )
 
-    print(f'Days left in 2026/2027: {user.get_remaining_allowance_for_year_starting_in(2026)/8}')
+    print(
+        f"Days left in 2026/2027: {user.get_remaining_allowance_for_year_starting_in(2026)/8}"
+    )
     return 0
 
 
