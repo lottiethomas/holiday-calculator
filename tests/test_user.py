@@ -2,11 +2,11 @@ from datetime import date
 
 import pytest
 
-from amount_exception import AmountException
-from entitlement_counting_method import EntitlementCountingMethod
-from holiday import Holiday
-from holiday_entitlement import HolidayEntitlement
-from user import User
+from holiday_calculator.amount_exception import AmountException
+from holiday_calculator.entitlement_counting_method import EntitlementCountingMethod
+from holiday_calculator.holiday import Holiday
+from holiday_calculator.holiday_entitlement import HolidayEntitlement
+from holiday_calculator.user import User
 
 
 def mock_daily_cost(mocker, cost=1):

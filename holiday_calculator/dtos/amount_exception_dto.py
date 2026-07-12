@@ -3,7 +3,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, model_validator, Field
 
-from amount_exception import AmountException
+from holiday_calculator.amount_exception import AmountException
 
 
 class AmountExceptionDto(BaseModel):

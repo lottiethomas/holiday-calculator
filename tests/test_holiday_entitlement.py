@@ -2,9 +2,9 @@ from datetime import date
 
 import pytest
 
-from amount_exception import AmountException
-from entitlement_counting_method import EntitlementCountingMethod
-from holiday_entitlement import HolidayEntitlement
+from holiday_calculator.amount_exception import AmountException
+from holiday_calculator.entitlement_counting_method import EntitlementCountingMethod
+from holiday_calculator.holiday_entitlement import HolidayEntitlement
 
 
 def make_entitlement(

@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field
 
-from dtos.holiday_dto import HolidayDto
-from dtos.holiday_entitlement_dto import HolidayEntitlementDto
-from user import User
+from holiday_calculator.dtos.holiday_dto import HolidayDto
+from holiday_calculator.dtos.holiday_entitlement_dto import HolidayEntitlementDto
+from holiday_calculator.user import User
 
 
 class UserDto(BaseModel):

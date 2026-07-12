@@ -2,7 +2,7 @@ from datetime import date
 
 import pytest
 
-from amount_exception import AmountException
+from holiday_calculator.amount_exception import AmountException
 
 
 @pytest.mark.parametrize(

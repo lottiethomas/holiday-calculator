@@ -2,7 +2,7 @@ from datetime import date
 
 import pytest
 
-from holiday import Holiday
+from holiday_calculator.holiday import Holiday
 
 
 def holiday(start_day: int, end_day: int) -> Holiday:
