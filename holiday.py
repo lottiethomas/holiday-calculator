@@ -8,6 +8,10 @@ class Holiday:
     end_date: date
     description: str = ""
 
+    def __post_init__(self) -> None:
+        if self.end_date < self.start_date:
+            raise ValueError("End date must be on or after start date")
+
     def get_dates_in_holiday(
         self, from_date: date | None = None, to_date: date | None = None
     ) -> list[date]:

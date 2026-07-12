@@ -13,6 +13,34 @@ def holiday(start_day: int, end_day: int) -> Holiday:
 
 
 @pytest.mark.parametrize(
+    "start_date, end_date",
+    [
+        (
+            date(2026, 1, 1),
+            date(2026, 1, 1),
+        ),
+        (
+            date(2026, 1, 1),
+            date(2026, 1, 2),
+        ),
+    ],
+)
+def test_end_date_can_be_on_or_after_start_date(start_date: date, end_date: date):
+    # Given a holiday where the end date is after the start date
+    # When the holiday is created,
+    # No validation exception should be thrown
+    Holiday(start_date, end_date)
+
+
+def test_end_date_not_before_start_date():
+    # Given a holiday where the end date is before the start date
+    # When the holiday is created,
+    # A validation exception should be thrown
+    with pytest.raises(ValueError):
+        Holiday(date(2026, 1, 1), date(2025, 12, 31))
+
+
+@pytest.mark.parametrize(
     "holiday_start_day, holiday_end_day, from_date, to_date, expected_dates",
     [
         pytest.param(

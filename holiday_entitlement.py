@@ -22,6 +22,29 @@ class HolidayEntitlement:
 
     _bank_holidays = holidays.country_holidays("UK", subdiv="ENG")
 
+    def __post_init__(self):
+        if len(self.working_pattern) != 7:
+            raise ValueError("Working pattern must be 7 days long")
+        if not 1 <= self.renewal_month <= 12:
+            raise ValueError("Renewal month must be between 1 and 12")
+        if self.counting_method is EntitlementCountingMethod.DAYS:
+            if self.amount > 366:
+                raise ValueError("Amount must not exceed a year")
+            for day in self.working_pattern:
+                if not 0 <= day <= 1:
+                    raise ValueError(
+                        "When the counting method is DAYS, each day must be between 0 and 1"
+                    )
+        if self.counting_method is EntitlementCountingMethod.HOURS:
+            if self.amount > 8784:
+                raise ValueError("Amount must not exceed a year")
+            for day in self.working_pattern:
+                if not 0 <= day <= 24:
+                    raise ValueError(
+                        "When the counting method is HOURS, each day must be between 0 and 24"
+                    )
+        return self
+
     def get_description_of_entitlement_for_year_starting_in(self, year: int) -> str:
         if self.renewal_month == 1:
             return str(year)
