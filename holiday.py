@@ -16,14 +16,9 @@ class Holiday:
     def get_dates_in_holiday(
         self, from_date: date | None = None, to_date: date | None = None
     ) -> Iterable[date]:
-        start_date = (
-            self.start_date
-            if from_date is None or from_date < self.start_date
-            else from_date
-        )
-        end_date = (
-            self.end_date if to_date is None or to_date > self.end_date else to_date
-        )
+        start_date = max(self.start_date, from_date) if from_date else self.start_date
+        end_date = min(self.end_date, to_date) if to_date else self.end_date
+
         return [
             start_date + timedelta(days=i)
             for i in range((end_date - start_date).days + 1)
