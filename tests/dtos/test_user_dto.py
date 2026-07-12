@@ -1,8 +1,8 @@
 import pytest
 from pydantic import ValidationError
 
-from holiday_calculator.dtos import HolidayEntitlementDto
 from holiday_calculator.dtos.holiday_dto import HolidayDto
+from holiday_calculator.dtos.holiday_entitlement_dto import HolidayEntitlementDto
 from holiday_calculator.dtos.user_dto import UserDto
 
 

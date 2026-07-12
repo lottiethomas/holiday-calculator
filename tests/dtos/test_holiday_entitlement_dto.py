@@ -3,8 +3,8 @@ from typing import Optional
 import pytest
 from pydantic import ValidationError
 
-from holiday_calculator.dtos import AmountExceptionDto
-from holiday_calculator.dtos import HolidayEntitlementDto
+from holiday_calculator.dtos.amount_exception_dto import AmountExceptionDto
+from holiday_calculator.dtos.holiday_entitlement_dto import HolidayEntitlementDto
 from holiday_calculator.entitlement_counting_method import EntitlementCountingMethod
 
 DEFAULT_COUNTING_METHOD = "DAYS"
