@@ -6,7 +6,7 @@ from typing import Optional, Tuple
 import holidays
 
 from amount_exception import AmountException
-from entitlement_counting_method import EntitlementCountingMethod
+from holiday_calculator.entitlement_counting_method import EntitlementCountingMethod
 
 
 @dataclass
