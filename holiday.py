@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import date, timedelta
+from typing import Iterable
 
 
 @dataclass
@@ -14,7 +15,7 @@ class Holiday:
 
     def get_dates_in_holiday(
         self, from_date: date | None = None, to_date: date | None = None
-    ) -> list[date]:
+    ) -> Iterable[date]:
         start_date = (
             self.start_date
             if from_date is None or from_date < self.start_date
