@@ -1,9 +1,9 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date
 
 
 @dataclass
 class AmountException:
-    start_date: datetime
-    end_date: datetime
+    start_date: date
+    end_date: date
     amount: float

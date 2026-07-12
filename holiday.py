@@ -1,16 +1,16 @@
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import date, timedelta
 
 
 @dataclass
 class Holiday:
-    start_date: datetime
-    end_date: datetime
+    start_date: date
+    end_date: date
     description: str = ""
 
     def get_dates_in_holiday(
-        self, from_date: datetime | None = None, to_date: datetime | None = None
-    ) -> list[datetime]:
+        self, from_date: date | None = None, to_date: date | None = None
+    ) -> list[date]:
         start_date = (
             self.start_date
             if from_date is None or from_date < self.start_date
@@ -24,6 +24,6 @@ class Holiday:
             for i in range((end_date - start_date).days + 1)
         ]
 
-    def is_in_date_range(self, from_date: datetime, to_date: datetime) -> bool:
+    def is_in_date_range(self, from_date: date, to_date: date) -> bool:
         """Returns true if any day of the holiday is within the date range"""
         return self.start_date <= to_date and from_date <= self.end_date
