@@ -1,6 +1,6 @@
 import calendar
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import date
 from typing import Optional, Tuple
 
 import holidays
@@ -12,6 +12,7 @@ from entitlement_counting_method import EntitlementCountingMethod
 @dataclass
 class HolidayEntitlement:
     """Class for tracking the holiday entitlement of an individual"""
+
     counting_method: EntitlementCountingMethod
     amount: float
     working_pattern: Tuple[float, float, float, float, float, float, float]
@@ -19,28 +20,30 @@ class HolidayEntitlement:
     renewal_month: int
     amount_exceptions: Optional[list[AmountException]] = None
 
-    _bank_holidays = holidays.country_holidays('UK', subdiv='ENG')
+    _bank_holidays = holidays.country_holidays("UK", subdiv="ENG")
 
     def get_description_of_entitlement_for_year_starting_in(self, year: int) -> str:
         if self.renewal_month == 1:
             return str(year)
         else:
-            return (f'{calendar.month_name[self.renewal_month]} {str(year)} to '
-                    f'{calendar.month_name[self.renewal_month - 1]} {str(year + 1)}')
+            return (
+                f"{calendar.month_name[self.renewal_month]} {str(year)} to "
+                f"{calendar.month_name[self.renewal_month - 1]} {str(year + 1)}"
+            )
 
-    def get_cost_of_day(self, day: datetime) -> float:
+    def get_cost_of_day(self, day: date) -> float:
         if not self.bank_holidays_counted:
             if day in self._bank_holidays:
                 return 0
         return self.working_pattern[day.weekday()]
 
-    def get_entitlement_for_date(self, date: datetime) -> float:
+    def get_entitlement_on_date(self, on_date: date) -> float:
         if self.amount_exceptions is None:
             return self.amount
         else:
             # If the date is within an exception range, return the exception amount
             # Otherwise return the entitlement amount
             for exception in self.amount_exceptions:
-                if exception.start_date <= date <= exception.end_date:
+                if exception.start_date <= on_date <= exception.end_date:
                     return exception.amount
             return self.amount

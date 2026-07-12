@@ -1,4 +1,4 @@
-from datetime import datetime as dt
+from datetime import date
 
 import pytest
 
@@ -32,13 +32,13 @@ def holiday_entitlement_with_exception():
         working_pattern=(1, 1, 1, 1, 1, 1, 1),
         bank_holidays_counted=True,
         renewal_month=1,
-        amount_exceptions=[AmountException(dt(2026, 1, 1), dt(2026, 12, 31), 50)],
+        amount_exceptions=[AmountException(date(2026, 1, 1), date(2026, 12, 31), 50)],
     )
 
 
 def test_get_cost_for_holiday(holiday_entitlement, mocker):
     # Given a user with a holiday that is 14 days long
-    user = User(holiday_entitlement, [Holiday(dt(2026, 4, 1), dt(2026, 4, 14))])
+    user = User(holiday_entitlement, [Holiday(date(2026, 4, 1), date(2026, 4, 14))])
     # And that each day costs 1
     mock_daily_cost(mocker)
     # When the cost of the holiday is retrieved,
@@ -48,7 +48,7 @@ def test_get_cost_for_holiday(holiday_entitlement, mocker):
 
 def test_get_cost_for_single_day_holiday(holiday_entitlement, mocker):
     # Given a user with a one-day holiday
-    holiday = Holiday(dt(2026, 4, 1), dt(2026, 4, 1))
+    holiday = Holiday(date(2026, 4, 1), date(2026, 4, 1))
     user = User(holiday_entitlement, [holiday])
     # And that the day costs 1
     mock_daily_cost(mocker)
@@ -62,8 +62,8 @@ def test_get_cost_of_holiday_when_user_has_multiple(holiday_entitlement, mocker)
     user = User(
         holiday_entitlement,
         [
-            Holiday(dt(2026, 4, 1), dt(2026, 4, 14)),
-            Holiday(dt(2026, 4, 15), dt(2026, 4, 15)),
+            Holiday(date(2026, 4, 1), date(2026, 4, 14)),
+            Holiday(date(2026, 4, 15), date(2026, 4, 15)),
         ],
     )
     # And that each day costs 1
@@ -81,32 +81,32 @@ def test_get_cost_of_holiday_when_user_has_multiple(holiday_entitlement, mocker)
     [
         pytest.param(
             [
-                Holiday(dt(2026, 4, 1), dt(2026, 4, 14)),
-                Holiday(dt(2026, 8, 11), dt(2026, 8, 20)),
+                Holiday(date(2026, 4, 1), date(2026, 4, 14)),
+                Holiday(date(2026, 8, 11), date(2026, 8, 20)),
             ],
             24,
             id="both_holidays_inside_range",
         ),
         pytest.param(
             [
-                Holiday(dt(2026, 4, 1), dt(2026, 4, 14)),
-                Holiday(dt(2027, 8, 11), dt(2027, 8, 20)),
+                Holiday(date(2026, 4, 1), date(2026, 4, 14)),
+                Holiday(date(2027, 8, 11), date(2027, 8, 20)),
             ],
             14,
             id="ignores_holiday_outside_range",
         ),
         pytest.param(
-            [Holiday(dt(2026, 1, 1), dt(2026, 1, 3))],
+            [Holiday(date(2026, 1, 1), date(2026, 1, 3))],
             3,
             id="includes_start_boundary",
         ),
         pytest.param(
-            [Holiday(dt(2026, 12, 29), dt(2026, 12, 31))],
+            [Holiday(date(2026, 12, 29), date(2026, 12, 31))],
             3,
             id="includes_end_boundary",
         ),
         pytest.param(
-            [Holiday(dt(2027, 1, 1), dt(2027, 1, 10))],
+            [Holiday(date(2027, 1, 1), date(2027, 1, 10))],
             0,
             id="returns_zero_when_none_match",
         ),
@@ -119,7 +119,7 @@ def test_get_cost_of_all_holidays_in_date_range(
     mock_daily_cost(mocker)
     assert (
         user.get_cost_for_holidays_in_date_range(
-            start_date=dt(2026, 1, 1), end_date=dt(2026, 12, 31)
+            start_date=date(2026, 1, 1), end_date=date(2026, 12, 31)
         )
         == expected_cost
     )
@@ -130,8 +130,8 @@ def test_get_cost_of_all_holidays_in_year(holiday_entitlement, mocker):
     user = User(
         holiday_entitlement,
         [
-            Holiday(dt(2026, 4, 1), dt(2026, 4, 14)),
-            Holiday(dt(2026, 8, 11), dt(2026, 8, 20)),
+            Holiday(date(2026, 4, 1), date(2026, 4, 14)),
+            Holiday(date(2026, 8, 11), date(2026, 8, 20)),
         ],
     )
     # And that each day costs 1
@@ -149,8 +149,8 @@ def test_get_cost_of_all_holidays_in_year_ignores_out_of_range(
     user = User(
         holiday_entitlement,
         [
-            Holiday(dt(2026, 4, 1), dt(2026, 4, 14)),
-            Holiday(dt(2027, 8, 11), dt(2027, 8, 20)),
+            Holiday(date(2026, 4, 1), date(2026, 4, 14)),
+            Holiday(date(2027, 8, 11), date(2027, 8, 20)),
         ],
     )
     # And that each day costs 1
@@ -169,9 +169,9 @@ def test_get_cost_for_holidays_in_holiday_year_with_april_renewal_includes_full_
     user = User(
         holiday_entitlement,
         [
-            Holiday(dt(2026, 4, 1), dt(2026, 4, 1)),
-            Holiday(dt(2027, 3, 31), dt(2027, 3, 31)),
-            Holiday(dt(2027, 4, 1), dt(2027, 4, 1)),
+            Holiday(date(2026, 4, 1), date(2026, 4, 1)),
+            Holiday(date(2027, 3, 31), date(2027, 3, 31)),
+            Holiday(date(2027, 4, 1), date(2027, 4, 1)),
         ],
     )
     # And that each day costs 1
@@ -198,7 +198,7 @@ def test_get_cost_for_holidays_in_holiday_year_counts_only_matching_part_of_span
     user = User(
         holiday_entitlement,
         [
-            Holiday(dt(2027, 3, 29), dt(2027, 4, 2)),
+            Holiday(date(2027, 3, 29), date(2027, 4, 2)),
         ],
     )
     mock_daily_cost(mocker)
@@ -210,8 +210,8 @@ def test_remaining_allowance_for_year(holiday_entitlement, mocker):
     user = User(
         holiday_entitlement,
         [
-            Holiday(dt(2026, 4, 1), dt(2026, 4, 14)),
-            Holiday(dt(2026, 8, 11), dt(2026, 8, 20)),
+            Holiday(date(2026, 4, 1), date(2026, 4, 14)),
+            Holiday(date(2026, 8, 11), date(2026, 8, 20)),
         ],
     )
     # And that each day costs 1
@@ -230,8 +230,8 @@ def test_remaining_allowance_for_year_ignores_out_of_range(holiday_entitlement, 
     user = User(
         holiday_entitlement,
         [
-            Holiday(dt(2026, 4, 1), dt(2026, 4, 14)),
-            Holiday(dt(2027, 8, 11), dt(2027, 8, 20)),
+            Holiday(date(2026, 4, 1), date(2026, 4, 14)),
+            Holiday(date(2027, 8, 11), date(2027, 8, 20)),
         ],
     )
     # And that each day costs 1
@@ -251,8 +251,8 @@ def test_remaining_allowance_for_year_uses_amount_exception(
     user = User(
         holiday_entitlement_with_exception,
         [
-            Holiday(dt(2026, 4, 1), dt(2026, 4, 14)),
-            Holiday(dt(2026, 8, 11), dt(2026, 8, 20)),
+            Holiday(date(2026, 4, 1), date(2026, 4, 14)),
+            Holiday(date(2026, 8, 11), date(2026, 8, 20)),
         ],
     )
     # And that each day costs 1
@@ -284,7 +284,7 @@ def test_remaining_allowance_for_year_uses_default_amount_when_exception_does_no
     # Given an amount exception that only applies in 2026
     user = User(
         holiday_entitlement_with_exception,
-        [Holiday(dt(2027, 4, 1), dt(2027, 4, 2))],
+        [Holiday(date(2027, 4, 1), date(2027, 4, 2))],
     )
     # And that each day costs 1
     mock_daily_cost(mocker)
@@ -313,7 +313,7 @@ def test_remaining_allowance_for_year_deducts_only_matching_part_of_spanning_hol
     user = User(
         holiday_entitlement,
         [
-            Holiday(dt(2027, 3, 29), dt(2027, 4, 2)),
+            Holiday(date(2027, 3, 29), date(2027, 4, 2)),
         ],
     )
     mock_daily_cost(mocker)
